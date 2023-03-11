@@ -1,5 +1,6 @@
 const uuid = require('uuid')
 const mongoose = require('mongoose')
+var bcrypt = require('bcrypt')
 const Schema = mongoose.Schema
 
 // collection for org
@@ -14,6 +15,7 @@ const orgDataSchema = new Schema(
       required: true
     }
   },
+
   {
     collection: 'org'
   }
@@ -70,9 +72,9 @@ const clientDataSchema = new Schema(
       validate: [(org) => org.length > 0, 'needs at least one org']
     }
   },
+
   {
-    collection: 'client',
-    timestamps: true
+    collection: 'clients'
   }
 )
 
@@ -120,19 +122,93 @@ const eventDataSchema = new Schema(
     attendees: [
       {
         type: String,
-        ref: 'client'
+        ref: 'clients'
       }
     ]
   },
+
   {
-    collection: 'event'
+    collection: 'events'
   }
 )
 
+// collection for services
+const servicesDataSchema = new Schema(
+  {
+    _id: { type: String, default: uuid.v1 },
+    name: {
+      type: String,
+      required: true
+    },
+    description: {
+      type: String
+    },
+    orgs: {
+      type: [{ type: String, ref: 'org' }],
+      required: true,
+      validate: [(org) => org.length > 0, 'needs at least one org']
+    }
+  },
+
+  {
+    collection: 'service'
+  }
+)
+
+// collection for users
+const usersDataSchema = new Schema(
+  {
+    _id: { type: String, default: uuid.v1 },
+    username: {
+      type: String,
+      required: true
+    },
+    password: {
+      type: String
+    },
+    role: {
+      type: String
+    },
+    org: {
+      type: String,
+      required: true
+    }
+  },
+
+  {
+    collection: 'user'
+  }
+)
+
+// hash the password
+usersDataSchema.methods.generateHash = function (password) {
+  return bcrypt.hashSync(password, bcrypt.genSaltSync(8), null)
+}
+
+// checking if password is valid
+usersDataSchema.methods.validPassword = function (password) {
+  return bcrypt.compareSync(password, this.password)
+}
+
+/**
+// hash the password
+//https://stackoverflow.com/questions/43092071/how-should-i-store-salts-and-passwords-in-mongodb
+usersDataSchema.methods.generateHash = function(password){
+  return bcrypt.hashSync(password, bcrypt.genSalSync(8), null)
+}
+
+// checking if password is valid
+//https://stackoverflow.com/questions/43092071/how-should-i-store-salts-and-passwords-in-mongodb
+usersDataSchema.methods.validPassword = function(password) {
+  return bcrypt.compareSync(password, this.password);
+};
+ */
 // create models from mongoose schemas
 const clients = mongoose.model('client', clientDataSchema)
 const orgs = mongoose.model('org', orgDataSchema)
 const events = mongoose.model('event', eventDataSchema)
+const users = mongoose.model('user', usersDataSchema)
+const services = mongoose.model('service', servicesDataSchema)
 
 // package the models in an object to export
-module.exports = { clients, orgs, events }
+module.exports = { clients, orgs, events, users, services }
