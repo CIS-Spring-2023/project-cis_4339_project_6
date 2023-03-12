@@ -15,7 +15,6 @@ const orgDataSchema = new Schema(
       required: true
     }
   },
-
   {
     collection: 'org'
   }
@@ -191,6 +190,8 @@ usersDataSchema.methods.validPassword = function (password) {
 }
 
 /**
+ * to be implemented in srint 3
+ * implementation according to https://stackoverflow.com/questions/43092071/how-should-i-store-salts-and-passwords-in-mongodb
 // hash the password
 //https://stackoverflow.com/questions/43092071/how-should-i-store-salts-and-passwords-in-mongodb
 usersDataSchema.methods.generateHash = function(password){
