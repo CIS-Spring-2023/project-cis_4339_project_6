@@ -33,7 +33,7 @@ export default {
         <h4>Login</h4>
         <p>Please enter username and password</p>
       </div>
-      <form @submit.prevent="store.login(username, password)" novalidate="true">
+      <form @submit.prevent="store.login(username, password)">
         <div class="form-group" style="margin-top: 20px; margin-bottom: 10px">
           <label style="margin-bottom: 5px">Username</label>
           <input

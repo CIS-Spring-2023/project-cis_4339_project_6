@@ -28,14 +28,12 @@ export default {
           {
             borderWidth: 0,
             backgroundColor: backgroundColor,
-            borderColor: borderColor,
-            borderWidth: 0,
+            borderWidth: 3,
             data: this.chartData
           }
         ],
-        hoverOffet: 4
+        hoverOffet: 4,
       },
-
       options: {
         plugins: {
           legend: {
@@ -47,8 +45,7 @@ export default {
                 weight: 'bold'
               }
             }
-          },
-
+          },  
           title: {
             display: true,
             text: 'Clients per zip code',

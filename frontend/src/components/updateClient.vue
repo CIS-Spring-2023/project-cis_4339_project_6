@@ -1,5 +1,5 @@
 <script>
-import { useLoggedInUserStore } from "../../stores/userLogin";
+import { useLoggedInUserStore } from '../../stores/userLogin'
 import useVuelidate from "@vuelidate/core";
 import { required, email, alpha, numeric } from "@vuelidate/validators";
 import VueMultiselect from "vue-multiselect";
@@ -235,12 +235,15 @@ export default {
 
             <div></div>
             <!-- form field -->
+            <!-- updated email validation pattern, existing pattern gives error when there is none -->
+            <!-- https://regex101.com/r/zQ3mH7/1 -->
             <div class="flex flex-col">
               <label class="block">
                 <span class="text-gray-700">Email</span>
                 <input
                   type="email"
                   class="w-full form-control mt-2 rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+                  pattern="^[a-zA-Z0-9\._-]+@[a-zA-Z0-9-]{2,}[.][a-zA-Z]{2,4}$"
                   v-model="client.email"
                   :disabled="!user.isEditor"
                 />
@@ -383,7 +386,7 @@ export default {
             </button>
 
             <button
-              @click="deregisterClient"
+              @click="deleteClient"
               type="submit"
               class="btn mr-20 fw-bold"
               v-if="user.isEditor"

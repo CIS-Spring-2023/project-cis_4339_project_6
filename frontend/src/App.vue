@@ -39,18 +39,20 @@ export default {
       v-if="user.isEditor || user.isViewer"
     >
       <header class="w-full">
-        <section class="text-center mb-5 mt-3">
+        <section class="text-center mb-4 mt-3">
           <img class="m-auto" src="@\assets\DanPersona.svg" />
+          <hr class="mt-10">
+          <div class="container text-start">
           <!-- Display username and role of logged in user -->
-          <p class="userCred mt-10">
+          <p class="userCred mt-3">
             Welcome <strong> {{ user.name }} </strong>
           </p>
           <p class="userCred mt-2">
             Logged in as: <strong> {{ user.role }} </strong>
-          </p>
+          </p></div>
         </section>
         <hr />
-        <nav class="mt-10">
+        <nav class="mt-5">
           <ul class="flex flex-col gap-4">
             <li class="list-class">
               <router-link to="/" class="routerlink">
@@ -177,5 +179,6 @@ export default {
 .userCred {
   font-size: 14px;
   justify-items: start;
+  color:lightgrey;
 }
 </style>

@@ -40,11 +40,11 @@ export default {
   },
   methods: {
     // if valid:
-    //  if client with phonenumber exists in db:
-    //    if client already registered with org:
-    //      do nothing
-    //    else add org to client org array
-    //  else create client document
+    // if client with phonenumber exists in db:
+    // if client already registered with org:
+    // do nothing
+    // else add org to client org array
+    // else create client document
     registerClient() {
       this.v$.$validate().then((valid) => {
         if (valid) {
@@ -53,14 +53,14 @@ export default {
             .then((res) => {
               if (res.data) {
                 if (res.data.orgs.includes(this.org)) {
-                  alert("Client phone number has already been registered.");
-                  this.$router.push({ name: "findclient" });
+                  alert('Client phone number has already been registered.')
+                  this.$router.push({ name: 'findclient' })
                 } else {
                   axios
                     .put(`${apiURL}/clients/register/${res.data._id}`)
                     .then(() => {
-                      alert("Client registered");
-                      this.$router.push({ name: "findclient" });
+                      alert('Client registered')
+                      this.$router.push({ name: 'findclient' })
                     })
                     .catch((error) => {
                       console.log(error);
@@ -70,8 +70,8 @@ export default {
                 axios
                   .post(`${apiURL}/clients`, this.client)
                   .then(() => {
-                    alert("Client added");
-                    this.$router.push({ name: "findclient" });
+                    alert('Client added')
+                    this.$router.push({ name: 'findclient' })
                   })
                   .catch((error) => {
                     console.log(error);
@@ -176,12 +176,15 @@ export default {
 
             <div></div>
             <!-- form field -->
+            <!-- updated email validation pattern, existing pattern gives error when there is none -->
+            <!-- https://regex101.com/r/zQ3mH7/1 -->
             <div class="flex flex-col">
               <label class="block">
                 <span class="text-gray-700">Email</span>
                 <input
                   type="email"
                   class="w-full mt-2 rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+                  pattern="^[a-zA-Z0-9\._-]+@[a-zA-Z0-9-]{2,}[.][a-zA-Z]{2,4}$"
                   v-model="client.email"
                 />
                 <span class="text-black" v-if="v$.client.email.$error">
@@ -311,10 +314,7 @@ export default {
         </div>
         <!-- submit button -->
         <div class="flex justify-between mt-10 mr-20">
-          <button
-            class="btn btn-danger rounded  fw-bold "
-            type="submit"
-          >
+          <button class="btn btn-danger rounded fw-bold" type="submit">
             Add Client
           </button>
         </div>
