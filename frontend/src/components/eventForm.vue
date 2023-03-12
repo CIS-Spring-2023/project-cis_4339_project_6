@@ -34,8 +34,7 @@ export default {
   methods: {
     getServices() {
       axios.get(`${apiURL}/services`).then((res) => {
-      
-        this.servicesAll = res.data.map((item) => item)
+        this.servicesAll = res.data.map((item) => item);
       });
     },
     async handleSubmitForm() {
@@ -55,9 +54,9 @@ export default {
       }
     },
   },
+
   // sets validations for the various data properties
-  validations() 
- {
+  validations() {
     return {
       event: {
         name: { required },
@@ -137,18 +136,26 @@ export default {
                 </label>
               </div>
             </div>
-  
-        
-
+            <!--List all curent services which is then selected via a checkbox to add service -->
             <div class="row mt-5">
               <div class="col-lg-6">
                 <div class="card" style="width: auto">
-                  <div class="card-header fw-bold">Services Offered at Event</div>
+                  <div class="card-header fw-bold">
+                    Services Offered at Event
+                  </div>
                   <div>
-                    <div class="card-body " style="overflow-y: auto; height:120px">
+                    <div
+                      class="card-body"
+                      style="overflow-y: auto; height: 120px"
+                    >
                       <ul class="">
                         <li v-for="serv in servicesAll" :key="servicesAll._id">
-                          <input type="checkbox" class="mr-2"  :value="serv._id" v-model="event.services" />
+                          <input
+                            type="checkbox"
+                            class="mr-2"
+                            :value="serv._id"
+                            v-model="event.services"
+                          />
                           <span>{{ serv.name }}</span>
                         </li>
                       </ul>
@@ -159,7 +166,7 @@ export default {
             </div>
           </div>
         </div>
-        
+
         <div class="row mt-4">
           <div class="col-sm-3">
             <h2 class="text-2xl font-bold">Event Address</h2>
@@ -227,9 +234,9 @@ export default {
             <div class="row mt-4">
               <div class="col-8 col-sm-4 mb-4">
                 <button
-                  class="bg-red-700 text-white rounded fw-bold"
+                  class="btn  rounded fw-bold"
                   type="submit"
-                  style="width: 100px"
+                  style="width: 100px; background-color: #b91c1c; color: white"
                 >
                   Save
                 </button>
@@ -238,7 +245,12 @@ export default {
           </div>
         </div>
       </div>
-    
     </form>
   </main>
 </template>
+<style>
+.card-header {
+  background-color: #c8102e;
+  color: white;
+}
+</style>

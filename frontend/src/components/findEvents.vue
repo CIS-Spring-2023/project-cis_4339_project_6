@@ -111,14 +111,15 @@ export default {
         <div></div>
         <div class="mt-5 grid-cols-2">
           <button
-            class="mr-10 border border-red-700 bg-white text-red-700 rounded"
+            class="mr-10  btn btn-outline-danger rounded rounded"
             @click="clearSearch"
             type="submit"
           >
             Clear Search
           </button>
           <button
-            class="bg-red-700 text-white rounded"
+            class="btn "
+            style="background-color: #b91c1c; color: white"
             @click="handleSubmitForm"
             type="submit"
           >
@@ -135,15 +136,16 @@ export default {
     >
       <div class="ml-10">
         <h2 class="text-2xl font-bold">List of Events</h2>
-        <h3 class="italic">Click table row to edit/display an entry</h3>
+        <h6 class="italic">Click table row to edit/display an entry</h6>
       </div>
       <div class="flex flex-col col-span-2">
-        <table class="min-w-full shadow-md rounded">
-          <thead class="bg-gray-50 text-xl">
+      <div class="table-responsive" style="height: 300px">
+        <table class=" table min-w-full shadow-md rounded ">
+          <thead class="table-heading text-l"    style="position: sticky; top: 0">
             <tr>
-              <th class="p-4 text-left">Event Name</th>
-              <th class="p-4 text-left">Event Date</th>
-              <th class="p-4 text-left">Event Address</th>
+              <th class="p-3 text-left">Event Name</th>
+              <th class="p-3 text-left">Event Date</th>
+              <th class="p-3 text-left">Event Address</th>
             </tr>
           </thead>
           <tbody class="divide-y divide-gray-300">
@@ -152,13 +154,20 @@ export default {
               v-for="event in events"
               :key="event._id"
             >
-              <td class="p-2 text-left">{{ event.name }}</td>
-              <td class="p-2 text-left">{{ formattedDate(event.date) }}</td>
-              <td class="p-2 text-left">{{ event.address.line1 }}</td>
+              <td class="p-3 pt-2 pb-2 text-left">{{ event.name }}</td>
+              <td class="p-3 pt-2 pb-2 text-left">{{ formattedDate(event.date) }}</td>
+              <td class="p-3 pt-2 pb-2 text-left">{{ event.address.line1 }}</td>
             </tr>
           </tbody>
         </table>
       </div>
+      </div>
     </div>
   </main>
 </template>
+<style>
+.table-heading {
+  background-color: #b91c1c;
+  color: white;
+}
+</style>
