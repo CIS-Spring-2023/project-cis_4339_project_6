@@ -18,6 +18,10 @@ cd frontend
 npm install
 npm run dev
 ```
+Vite API in frontend .env file 
+```
+ VITE_ROOT_API=http://localhost:3000
+```
 ### 2. User Login Frontend
 
 | User name | Password | Role |
@@ -35,7 +39,27 @@ npm install
 npm start
 ```
 
+MongoDB setup information in the .env file (backend)
+```
+MONGO_URL=mongodb+srv://UH_CIS_Projects:8e9KZEH44u3ndOTo@ciscluster.xj0hvfk.mongodb.net/CIS4339_Project
+PORT = 3000
+org = Org6
+```
+
 ### 4. Backend - MongoDB DataSchema
 *Note: The dataschema structure is based on presumtions from demo application provided and will be updated as neccessary during sprint 3.* 
-The follwing depicts examples of the current data schema:
-#### 1. ORG dataschema
+The follwing depicts examples of the current data schema in the cloud MongoDB instance:
+#### ORG dataschema
+![OrgDataSchema](https://github.com/CIS-Spring-2023/project-cis_4339_project_6/blob/main/frontend/src/assets/OrgDataSchema.jpg)
+
+#### Client dataschema
+![ClientDataSchema](https://github.com/CIS-Spring-2023/project-cis_4339_project_6/blob/main/frontend/src/assets/ClienDataSchema.jpg)
+
+#### Event Data Schema
+![EventsDataSchema](https://github.com/CIS-Spring-2023/project-cis_4339_project_6/blob/main/frontend/src/assets/EventDataSchema.jpg)
+
+#### Service Data Schema
+![ServicesDataSchema](https://github.com/CIS-Spring-2023/project-cis_4339_project_6/blob/main/frontend/src/assets/ServiceDataSchema.jpg)
+
+#### User Data Schema
+![userDataSchema](https://github.com/CIS-Spring-2023/project-cis_4339_project_6/blob/main/frontend/src/assets/UserDataSchema.jpg)
