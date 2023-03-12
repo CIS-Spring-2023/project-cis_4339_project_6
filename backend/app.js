@@ -27,7 +27,7 @@ mongoose
   })
 
 // declare port number for the api
-const PORT = process.env.PORT || 3000
+const PORT = process.env.PORT || 3006
 
 // setup and access request body
 app.use(express.json())
@@ -37,6 +37,10 @@ app.use(morgan('dev'))
 app.use('/clients', require('./routes/clients'))
 app.use('/events', require('./routes/events'))
 app.use('/org', require('./routes/org'))
+app.use('/services', require('./routes/services'))
+app.use('/users', require('./routes/users'))
+
+
 
 app.listen(PORT, () => {
   console.log(`Server listening on port ${PORT}`)
