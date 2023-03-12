@@ -17,4 +17,17 @@ router.get('/', (req, res, next) => {
   })
 })
 
+/** POST method used to create new organization in test database via psotman*/
+router.post('/', (req, res, next) => {
+  const newOrg = req.body
+
+  orgs.create(newOrg, (error, data) => {
+    if (error) {
+      return next(error)
+    } else {
+      res.json(data)
+      console.log(data)
+    }
+  })
+})
 module.exports = router
