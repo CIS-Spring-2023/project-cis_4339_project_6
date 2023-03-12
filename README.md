@@ -2,7 +2,7 @@ This project uses [VueJS 3](https://vuejs.org/) with [Vite](https://vitejs.dev/)
 For form validation [Vuelidate](https://vuelidate-next.netlify.app/) is used.
 
 **IMPORTANT:** Frontend Testing
-   - The frontend relies on data from the backend to fucntion.  Please ensure backend is running before testing the frontend for Sprint 2.
+   - The front end relies on data from the backend to function. Please ensure the backend is running before testing the front end for Sprint 2.
    - Backend utilizes a cloud instance of MongoDB
 
 ## Index:
