@@ -49,10 +49,10 @@ org = Org6
 ### 4. Backend - MongoDB DataSchema
 *Note: The dataschema structure is based on presumtions from demo application provided and will be updated as neccessary during sprint 3.* 
 The follwing depicts examples of the current data schema in the cloud MongoDB instance:
-#### ORG data Schema
+#### ORG Data Schema
 ![OrgDataSchema](https://github.com/CIS-Spring-2023/project-cis_4339_project_6/blob/main/frontend/src/assets/OrgDataSchema.jpg)
 
-#### Client data Schema
+#### Client Data Schema
 ![ClientDataSchema](https://github.com/CIS-Spring-2023/project-cis_4339_project_6/blob/main/frontend/src/assets/ClienDataSchema.jpg)
 
 #### Event Data Schema
