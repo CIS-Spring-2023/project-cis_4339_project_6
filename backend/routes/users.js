@@ -4,7 +4,7 @@ const router = express.Router()
 
 const org = process.env.ORG
 
-// importing data model schemas
+// importing data model schema for users
 const { users } = require('../models/models')
 
 generateHash = function (password) {
@@ -15,6 +15,7 @@ validPassword = function (password) {
 }
 
 
+/** GET all users */
 router.get('/', (req, res, next) => {
   users.find({ org: org }, (error, data) => {
     if (error) {
@@ -26,7 +27,7 @@ router.get('/', (req, res, next) => {
   })
 })
 
-// GET user by username
+/**
 router.get('/username/:username', (req, res, next) => {
   // use findOne instead of find to not return array
   users.findOne({ username: req.params.username }, (error, data) => {
@@ -42,7 +43,9 @@ router.get('/username/:username', (req, res, next) => {
     }
   })
 })
+*/ 
 
+// GET user by username
 router.get('/:username', (req, res, next) => {
   // use findOne instead of find to not return array
   users.findOne({ username: req.params.username }, (error, data) => {
@@ -56,7 +59,9 @@ router.get('/:username', (req, res, next) => {
   })
 })
 
-// POST new User
+/** POST new User.  Only utilized to create new users and test
+ * password has functionality using Postamn
+ */
 router.post('/', (req, res, next) => {
   const newUser = req.body
   newUser.org = org
@@ -75,7 +80,5 @@ router.post('/', (req, res, next) => {
     }
   })
 })
-
-
 
 module.exports = router
