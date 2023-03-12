@@ -52,14 +52,7 @@ const router = createRouter({
       name: 'eventservices',
       props: true,
       component: () => import('../components/eventServices.vue')
-    },
-    {
-      path: '/registeruser',
-      name: 'registeruser',
-      props: true,
-      component: () => import('../components/registerUser.vue')
     }
-   
   ]
 })
 export default router
