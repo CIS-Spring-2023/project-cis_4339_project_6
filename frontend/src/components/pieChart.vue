@@ -32,7 +32,7 @@ export default {
             data: this.chartData
           }
         ],
-        hoverOffet: 4,
+        hoverOffet: 4
       },
       options: {
         plugins: {
@@ -45,7 +45,7 @@ export default {
                 weight: 'bold'
               }
             }
-          },  
+          },
           title: {
             display: true,
             text: 'Clients per zip code',
@@ -75,10 +75,6 @@ export default {
 </script>
 <template>
   <div class="shadow-lg rounded-lg overflow-hidden">
-    <canvas
-      class="p-10"
-      ref="ZipCodeChart"
-      style="height: 600px; width: 600px"
-    ></canvas>
+    <canvas class="p-10" ref="ZipCodeChart"></canvas>
   </div>
 </template>
