@@ -1,18 +1,18 @@
 <script>
 import { useLoggedInUserStore } from '../../stores/userLogin'
-import useVuelidate from "@vuelidate/core";
-import { required, email, alpha, numeric } from "@vuelidate/validators";
-import VueMultiselect from "vue-multiselect";
-import axios from "axios";
-import { DateTime } from "luxon";
-const apiURL = import.meta.env.VITE_ROOT_API;
+import useVuelidate from '@vuelidate/core'
+import { required, email, alpha, numeric } from '@vuelidate/validators'
+import VueMultiselect from 'vue-multiselect'
+import axios from 'axios'
+import { DateTime } from 'luxon'
+const apiURL = import.meta.env.VITE_ROOT_API
 
 export default {
-  props: ["id"],
+  props: ['id'],
   components: { VueMultiselect },
   setup() {
-    const user = useLoggedInUserStore();
-    return { v$: useVuelidate({ $autoDirty: true }), user };
+    const user = useLoggedInUserStore()
+    return { v$: useVuelidate({ $autoDirty: true }), user }
   },
   data() {
     return {
@@ -21,88 +21,89 @@ export default {
       eventsSelected: [],
       eventsRegistered: [],
       client: {
-        firstName: "",
-        middleName: "",
-        lastName: "",
-        email: "",
+        firstName: '',
+        middleName: '',
+        lastName: '',
+        email: '',
         phoneNumber: {
-          primary: "",
-          alternate: "",
+          primary: '',
+          alternate: ''
         },
         address: {
-          line1: "",
-          line2: "",
-          city: "",
-          county: "",
-          zip: "",
-        },
-      },
-    };
+          line1: '',
+          line2: '',
+          city: '',
+          county: '',
+          zip: ''
+        }
+      }
+    }
   },
   created() {
     axios.get(`${apiURL}/clients/id/${this.$route.params.id}`).then((res) => {
       // simplified setting client
-      this.client = res.data;
-    });
+      this.client = res.data
+    })
     axios.get(`${apiURL}/events`).then((res) => {
       // simplified setting eventsAll
-      this.eventsAll = res.data;
-    });
-    this.getEventsRegistered();
+      this.eventsAll = res.data
+    })
+    this.getEventsRegistered()
   },
   mounted() {
-    window.scrollTo(0, 0);
+    window.scrollTo(0, 0)
   },
   methods: {
     // better formattedDate function
     formattedDate(datetimeDB) {
       const dt = DateTime.fromISO(datetimeDB, {
-        zone: "utc",
-      });
+        zone: 'utc'
+      })
       return dt
         .setZone(DateTime.now().zoneName, { keepLocalTime: true })
-        .toLocaleString();
+        .toLocaleString()
     },
     nameWithDate({ name, date }) {
-      return `${name} (${this.formattedDate(date)})`;
+      return `${name} (${this.formattedDate(date)})`
     },
     getEventsRegistered() {
       axios
         .get(`${apiURL}/events/client/${this.$route.params.id}`)
         .then((res) => {
           // simplified setting eventsRegistered
-          this.eventsRegistered = res.data;
-        });
+          this.eventsRegistered = res.data
+        })
     },
     async updateClient() {
       // Checks to see if there are any errors in validation
-      const isFormCorrect = await this.v$.$validate();
+      const isFormCorrect = await this.v$.$validate()
       // If no errors found. isFormCorrect = True then the form is submitted
       if (isFormCorrect) {
         axios
           .put(`${apiURL}/clients/update/${this.id}`, this.client)
           .then(() => {
-            alert("Update has been saved.");
-            this.$router.back();
-          });
+            alert('Update has been saved.')
+            this.$router.back()
+          })
       }
     },
     addToEvent() {
       this.eventsSelected.forEach((event) => {
         axios
           .put(`${apiURL}/events/register`, null, {
-            params: { event: event._id, client: this.id },
+            params: { event: event._id, client: this.id }
           })
           .then(() => this.getEventsRegistered())
           .catch((error) => {
             if (error.response.data) {
-              alert(`${event.name}: ${error.response.data}`);
+              alert(`${event.name}: ${error.response.data}`)
             }
-          });
-      });
+          })
+      })
       // clear events selection after attempting to register for events
-      this.eventsSelected = [];
+      this.eventsSelected = []
     },
+
     // replaces client hard delete
     // find all events where client appears in attendees array and pull it
     // then pull org from client org array
@@ -112,28 +113,29 @@ export default {
         .then((res) => {
           res.data.forEach((e) => {
             axios.put(`${apiURL}/events/deregister`, null, {
-              params: { event: e._id, client: this.id },
-            });
-          });
+              params: { event: e._id, client: this.id }
+            })
+          })
         })
         .finally(
           axios.put(`${apiURL}/clients/deregister/${this.id}`).then(() => {
-            alert("Client has been deleted.");
-            this.$router.push({ name: "findclient" });
+            alert('Client has been deleted.')
+            this.$router.push({ name: 'findclient' })
           })
-        );
+        )
     },
+
     // unused hard delete method
     deleteClient() {
       axios.delete(`${apiURL}/clients/${this.id}`).then(() => {
-        alert("Client has been deleted.");
-        this.$router.push({ name: "findclient" });
-      });
+        alert('Client has been deleted.')
+        this.$router.push({ name: 'findclient' })
+      })
     },
     // function to allow click through to event details
     editEvent(eventID) {
-      this.$router.push({ name: "eventdetails", params: { id: eventID } });
-    },
+      this.$router.push({ name: 'eventdetails', params: { id: eventID } })
+    }
   },
   validations() {
     return {
@@ -142,12 +144,12 @@ export default {
         lastName: { required, alpha },
         email: { email },
         phoneNumber: {
-          primary: { required, numeric },
-        },
-      },
-    };
-  },
-};
+          primary: { required, numeric }
+        }
+      }
+    }
+  }
+}
 </script>
 <template>
   <main>
@@ -386,7 +388,7 @@ export default {
             </button>
 
             <button
-              @click="deleteClient"
+              @click="deregisterClient"
               type="submit"
               class="btn mr-20 fw-bold"
               v-if="user.isEditor"

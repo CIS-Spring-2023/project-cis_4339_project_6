@@ -1,12 +1,12 @@
 <script>
-import useVuelidate from "@vuelidate/core";
-import { required } from "@vuelidate/validators";
-import axios from "axios";
-const apiURL = import.meta.env.VITE_ROOT_API;
+import useVuelidate from '@vuelidate/core'
+import { required } from '@vuelidate/validators'
+import axios from 'axios'
+const apiURL = import.meta.env.VITE_ROOT_API
 
 export default {
   setup() {
-    return { v$: useVuelidate({ $autoDirty: true }) };
+    return { v$: useVuelidate({ $autoDirty: true }) }
   },
   data() {
     return {
@@ -14,45 +14,45 @@ export default {
       servicesAll: [],
       selectedServices: [],
       event: {
-        name: "",
+        name: '',
         services: [],
-        date: "",
+        date: '',
         address: {
-          line1: "",
-          line2: "",
-          city: "",
-          county: "",
-          zip: "",
+          line1: '',
+          line2: '',
+          city: '',
+          county: '',
+          zip: ''
         },
-        description: "",
-      },
-    };
+        description: ''
+      }
+    }
   },
   created() {
-    this.getServices();
+    this.getServices()
   },
   methods: {
     getServices() {
       axios.get(`${apiURL}/services`).then((res) => {
-        this.servicesAll = res.data.map((item) => item);
-      });
+        this.servicesAll = res.data.map((item) => item)
+      })
     },
     async handleSubmitForm() {
       // Checks to see if there are any errors in validation
-      const isFormCorrect = await this.v$.$validate();
+      const isFormCorrect = await this.v$.$validate()
       // If no errors found. isFormCorrect = True then the form is submitted
       if (isFormCorrect) {
         axios
           .post(`${apiURL}/events`, this.event)
           .then(() => {
-            alert("Event has been added.");
-            this.$router.push({ name: "findevents" });
+            alert('Event has been added.')
+            this.$router.push({ name: 'findevents' })
           })
           .catch((error) => {
-            console.log(error);
-          });
+            console.log(error)
+          })
       }
-    },
+    }
   },
 
   // sets validations for the various data properties
@@ -60,11 +60,11 @@ export default {
     return {
       event: {
         name: { required },
-        date: { required },
-      },
-    };
-  },
-};
+        date: { required }
+      }
+    }
+  }
+}
 </script>
 <template>
   <main>
@@ -141,7 +141,14 @@ export default {
               <div class="col-lg-6">
                 <div class="card" style="width: auto">
                   <div class="card-header fw-bold">
-                    Services Offered at Event
+                    Event Services
+                    <p
+                      class="mb-1 ml-4"
+                      style="font-style: oblique; color: white; font-size: 12px"
+                    >
+                      Select services to add to event <br />
+                      Deselect services to remove from events
+                    </p>
                   </div>
                   <div>
                     <div
@@ -149,7 +156,7 @@ export default {
                       style="overflow-y: auto; height: 120px"
                     >
                       <ul class="">
-                        <li v-for="serv in servicesAll" :key="servicesAll._id">
+                        <li v-for="serv in servicesAll" :key="serv._id">
                           <input
                             type="checkbox"
                             class="mr-2"
@@ -234,7 +241,7 @@ export default {
             <div class="row mt-4">
               <div class="col-8 col-sm-4 mb-4">
                 <button
-                  class="btn  rounded fw-bold"
+                  class="btn rounded fw-bold"
                   type="submit"
                   style="width: 100px; background-color: #b91c1c; color: white"
                 >

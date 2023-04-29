@@ -1,52 +1,60 @@
 <script>
-import { useLoggedInUserStore } from "../../stores/userLogin";
-import useVuelidate from "@vuelidate/core";
-import { required } from "@vuelidate/validators";
-import axios from "axios";
-import { DateTime } from "luxon";
-const apiURL = import.meta.env.VITE_ROOT_API;
+import { useLoggedInUserStore } from '../../stores/userLogin'
+import useVuelidate from '@vuelidate/core'
+import { required } from '@vuelidate/validators'
+import axios from 'axios'
+import { DateTime } from 'luxon'
+const apiURL = import.meta.env.VITE_ROOT_API
 
 export default {
-  props: ["id"],
+  props: ['id'],
   setup() {
-    const user = useLoggedInUserStore();
-    return { v$: useVuelidate({ $autoDirty: true }), user };
+    const user = useLoggedInUserStore()
+    return { v$: useVuelidate({ $autoDirty: true }), user }
   },
   data() {
     return {
       //array to hold all available event services
       servicesAll: [],
       clientAttendees: [],
+      eventServices: [],
       event: {
-        name: "",
+        name: '',
         services: [],
-        date: "",
+        date: '',
         address: {
-          line1: "",
-          line2: "",
-          city: "",
-          county: "",
-          zip: "",
+          line1: '',
+          line2: '',
+          city: '',
+          county: '',
+          zip: ''
         },
-        description: "",
-        attendees: [],
-      },
-    };
+        description: '',
+        attendees: []
+      }
+    }
   },
 
   created() {
     axios.get(`${apiURL}/events/id/${this.$route.params.id}`).then((res) => {
-      this.event = res.data;
+      this.event = res.data
 
-      this.event.date = this.formattedDate(this.event.date);
-      this.getServices();
+      this.event.date = this.formattedDate(this.event.date)
+      this.getServices()
 
       this.event.attendees.forEach((e) => {
         axios.get(`${apiURL}/clients/id/${e}`).then((res) => {
-          this.clientAttendees.push(res.data);
-        });
-      });
-    });
+          this.clientAttendees.push(res.data)
+        })
+      })
+
+      // Loop through event services resistered for specific event
+      this.event.services.forEach((e) => {
+        axios.get(`${apiURL}/services/id/${e}`).then((res) => {
+          this.eventServices.push(res.data)
+        })
+      })
+    })
   },
 
   methods: {
@@ -55,44 +63,52 @@ export default {
      */
     getServices() {
       axios.get(`${apiURL}/services`).then((res) => {
-        this.servicesAll = res.data;
-      });
+        this.servicesAll = res.data
+      })
     },
+
     // better formatted date, converts UTC to local time
     formattedDate(datetimeDB) {
       const dt = DateTime.fromISO(datetimeDB, {
-        zone: "utc",
-      });
+        zone: 'utc'
+      })
       return dt
         .setZone(DateTime.now().zoneName, { keepLocalTime: true })
-        .toISODate();
+        .toISODate()
     },
+
     handleEventUpdate() {
       axios.put(`${apiURL}/events/update/${this.id}`, this.event).then(() => {
-        alert("Update has been saved.");
-        this.$router.back();
-      });
+        alert('Update has been saved.')
+        this.$router.back()
+      })
     },
+
+    deregisterClient() {
+      axios.put(`${apiURL}/deregister`)
+    },
+
     editClient(clientID) {
-      this.$router.push({ name: "updateclient", params: { id: clientID } });
+      this.$router.push({ name: 'updateclient', params: { id: clientID } })
     },
+
     eventDelete() {
       axios.delete(`${apiURL}/events/${this.id}`).then(() => {
-        alert("Event has been deleted.");
-        this.$router.push({ name: "findevents" });
-      });
-    },
+        alert('Event has been deleted.')
+        this.$router.push({ name: 'findevents' })
+      })
+    }
   },
   // sets validations for the various data properties
   validations() {
     return {
       event: {
         name: { required },
-        date: { required },
-      },
-    };
-  },
-};
+        date: { required }
+      }
+    }
+  }
+}
 </script>
 <template>
   <main>
@@ -175,12 +191,42 @@ export default {
                 </label>
               </div>
             </div>
+          </div>
+        </div>
+        <div class="row mt-3">
+          <div class="col-sm-3">
+            <h2 class="text-2xl font-bold">Current Services</h2>
+          </div>
+          <div class="col-sm-9">
+            <div class="row">
+              <table class="table min-w-full shadow-md rounded table-hover">
+                <thead
+                  class="table-heading text-l"
+                  style="position: sticky; top: 0"
+                >
+                  <tr>
+                    <th class="p-3 text-left">Event Service</th>
+                    <th class="p-3 text-left">Service Description</th>
+                  </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-300">
+                  <tr v-for="eService in eventServices" :key="eService._id">
+                    <td class="p-3 pt-2 pb-2 text-left">
+                      {{ eService.name }}
+                    </td>
+                    <td class="p-3 pt-2 pb-2 text-left">
+                      {{ eService.description }}
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
             <div class="row mt-4">
-              <div class="col-lg-6">
-                <div class="card" style="width: auto">
-                <!--Added functionality to select from all availavle services -->
+              <div class="col-lg-8">
+                <div class="card" style="width: auto" v-if="user.isEditor">
+                  <!--Added functionality to select from all availavle services -->
                   <div class="card-header fw-bold">
-                    Services Offered at Event
+                    Select to Register or Deselect to Deregister Event Service
                   </div>
                   <div>
                     <div
