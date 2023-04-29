@@ -3,7 +3,7 @@ const mongoose = require('mongoose')
 var bcrypt = require('bcrypt')
 const Schema = mongoose.Schema
 
-// collection for org
+// Collection for organization
 const orgDataSchema = new Schema(
   {
     _id: {
@@ -20,7 +20,7 @@ const orgDataSchema = new Schema(
   }
 )
 
-// collection for clients
+// Collection for clients
 const clientDataSchema = new Schema(
   {
     _id: { type: String, default: uuid.v1 },
@@ -77,7 +77,7 @@ const clientDataSchema = new Schema(
   }
 )
 
-// collection for events
+// Collection for events
 const eventDataSchema = new Schema(
   {
     _id: { type: String, default: uuid.v1 },
@@ -131,7 +131,7 @@ const eventDataSchema = new Schema(
   }
 )
 
-// collection for services
+// Collection for services
 const servicesDataSchema = new Schema(
   {
     _id: { type: String, default: uuid.v1 },
@@ -154,7 +154,7 @@ const servicesDataSchema = new Schema(
   }
 )
 
-// collection for users
+// Collection for users
 const usersDataSchema = new Schema(
   {
     _id: { type: String, default: uuid.v1 },
@@ -179,37 +179,19 @@ const usersDataSchema = new Schema(
   }
 )
 
-// hash the password
-usersDataSchema.methods.generateHash = function (password) {
-  return bcrypt.hashSync(password, bcrypt.genSaltSync(8), null)
-}
-
-// checking if password is valid
+/** Authentication of user password
+ * Implemetaion according to the following resource
+ * https://stackoverflow.com/questions/43092071/how-should-i-store-salts-and-passwords-in-mongodb */
 usersDataSchema.methods.validPassword = function (password) {
   return bcrypt.compareSync(password, this.password)
 }
 
-/**
- * to be implemented in srint 3
- * implementation according to https://stackoverflow.com/questions/43092071/how-should-i-store-salts-and-passwords-in-mongodb
-// hash the password
-//https://stackoverflow.com/questions/43092071/how-should-i-store-salts-and-passwords-in-mongodb
-usersDataSchema.methods.generateHash = function(password){
-  return bcrypt.hashSync(password, bcrypt.genSalSync(8), null)
-}
-
-// checking if password is valid
-//https://stackoverflow.com/questions/43092071/how-should-i-store-salts-and-passwords-in-mongodb
-usersDataSchema.methods.validPassword = function(password) {
-  return bcrypt.compareSync(password, this.password);
-};
- */
-// create models from mongoose schemas
+// Create models from mongoose schemas
 const clients = mongoose.model('client', clientDataSchema)
 const orgs = mongoose.model('org', orgDataSchema)
 const events = mongoose.model('event', eventDataSchema)
 const users = mongoose.model('user', usersDataSchema)
 const services = mongoose.model('service', servicesDataSchema)
 
-// package the models in an object to export
+// Package the models in an object to export
 module.exports = { clients, orgs, events, users, services }
