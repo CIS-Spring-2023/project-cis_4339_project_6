@@ -7,7 +7,7 @@ const org = process.env.ORG
 const { events } = require('../models/models')
 
 // GET 10 most recent events for org
-router.get('/', (req, res, next) => {
+router.get('/', (_req, res, next) => {
   events
     .find({ org: org }, (error, data) => {
       if (error) {
@@ -134,6 +134,22 @@ router.put('/register', (req, res, next) => {
         } else {
           res.status(400).send('Client already added to event')
         }
+      }
+    }
+  )
+})
+
+// PUT remove attendee from event
+router.put('/deregister/:id', (req, res, next) => {
+  events.findByIdAndUpdate(
+    req.query.event,
+    { $pull: { attendees: req.query._id } },
+    (error, data) => {
+      if (error) {
+        console.log(error)
+        return next(error)
+      } else {
+        res.send('Client deregistered with event')
       }
     }
   )
