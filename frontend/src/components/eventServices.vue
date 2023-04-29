@@ -46,14 +46,14 @@ export default {
 
     /** Clear service name and description */
     clearServiceInfo() {
-      ;(this.service.name = ''),
-        (this.service.description = ''),
+      (this.service.name = ""),
+        (this.service.description = ""),
         (this.showUpdate = false);
     },
 
     /** close update form and clear service name and information */
     cancelUpdate() {
-      ;(this.addBtn = true), (this.showUpdate = false), this.clearServiceInfo()
+      (this.addBtn = true), (this.showUpdate = false), this.clearServiceInfo();
     },
 
     /** Close insert new service form */
@@ -79,7 +79,7 @@ export default {
         .delete(`${apiURL}/services/${this.serviceToUpdate._id}`)
         .then(() => {
           // alert('Event has been deleted.')
-          ;(this.showUpdate = false), (this.addBtn = true), this.getServices()
+          (this.showUpdate = false), (this.addBtn = true), this.getServices();
         });
       this.clearServiceInfo();
     },
@@ -87,7 +87,7 @@ export default {
     /** Post new service to database */
     addNewService() {
       axios.post(`${apiURL}/services`, this.service).then(() => {
-        ;(this.showNewSer = false),
+        (this.showNewSer = false),
           (this.showUpdateContainer = false),
           // alert('Service has been added.'),
 
@@ -98,7 +98,7 @@ export default {
     /** Retrieve information of selected service to be updated   */
     editService(serviceID) {
       axios.get(`${apiURL}/services/id/${serviceID}`).then((res) => {
-        ;(this.serviceToUpdate = res.data),
+        (this.serviceToUpdate = res.data),
           (this.service.name = res.data.name),
           (this.service.description = res.data.description),
           (this.showUpdate = true),
