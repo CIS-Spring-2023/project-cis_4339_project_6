@@ -1,21 +1,27 @@
 <script>
-import { DateTime } from 'luxon'
+import { useLoggedInUserStore } from '../../stores/userLogin'
 import axios from 'axios'
-import AttendanceChart from './barChart.vue'
+import ZipCodeChart from './pieChart.vue'
 const apiURL = import.meta.env.VITE_ROOT_API
 
 export default {
   components: {
-    AttendanceChart
+    ZipCodeChart
   },
   data() {
     return {
-      recentEvents: [],
+      zipCodeData: [],
+      zipCodeArray: [],
       labels: [],
+      zipCounts: [],
       chartData: [],
       loading: false,
       error: null
     }
+  },
+  setup() {
+    const user = useLoggedInUserStore();
+    return { user };
   },
   mounted() {
     this.getAttendanceData()
@@ -25,12 +31,11 @@ export default {
       try {
         this.error = null
         this.loading = true
-        const response = await axios.get(`${apiURL}/events/attendance`)
-        this.recentEvents = response.data
-        this.labels = response.data.map(
-          (item) => `${item.name} (${this.formattedDate(item.date)})`
-        )
-        this.chartData = response.data.map((item) => item.attendees.length)
+        const response = await axios.get(`${apiURL}/clients`)
+        this.zipCodeArray = response.data
+        this.zipCodeData = response.data.map((item) => item.address.zip)
+        this.labels = this.findZipCount().map((item) => item.zip)
+        this.chartData = this.findZipCount().map((item) => item.zipC)
       } catch (err) {
         if (err.response) {
           // client received an error response (5xx, 4xx)
@@ -54,6 +59,9 @@ export default {
       }
       this.loading = false
     },
+
+    /** The followig two mwthods are not required
+     * for data display in pie chart
     formattedDate(datetimeDB) {
       const dt = DateTime.fromISO(datetimeDB, {
         zone: 'utc'
@@ -65,6 +73,24 @@ export default {
     // method to allow click through table to event details
     editEvent(eventID) {
       this.$router.push({ name: 'eventdetails', params: { id: eventID } })
+    },
+    */
+
+    /** 
+     * The following implementation of counting duplicate values 
+     * of zip codes for chart was derrived from 
+     * https://stackoverflow.com/questions/19395257/how-to-count-duplicate-value-in-an-array-in-javascript
+     */
+    findZipCount() {
+      const duplicateZips = {}
+      this.zipCodeData.forEach(function (x) {
+        duplicateZips[x] = (duplicateZips[x] || 0) + 1
+      })
+      let zipArray = Object.entries(duplicateZips).map(([key, value]) => ({
+        zip: key,
+        zipC: value
+      }))
+      return zipArray
     }
   }
 }
@@ -78,62 +104,47 @@ export default {
       >
         Welcome
       </h1>
+      <p class="text-center" style="font-style: oblique; color: #b91c1c" v-if="!user.isEditor && !user.isViewer">
+        Please log in to access menu options
+      </p>
       <br />
-      <div
-        class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-x-6 gap-y-10"
-      >
-        <div class="ml-10"></div>
-        <div class="flex flex-col col-span-2">
-          <table class="min-w-full shadow-md rounded">
-            <thead class="bg-gray-50 text-xl">
-              <tr class="p-4 text-left">
-                <th class="p-4 text-left">Event Name</th>
-                <th class="p-4 text-left">Event Date</th>
-                <th class="p-4 text-left">Number of Attendees</th>
-              </tr>
-            </thead>
-            <tbody class="divide-y divide-gray-300">
-              <tr
-                @click="editEvent(event._id)"
-                v-for="event in recentEvents"
-                :key="event._id"
-              >
-                <td class="p-2 text-left">{{ event.name }}</td>
-                <td class="p-2 text-left">{{ formattedDate(event.date) }}</td>
-                <td class="p-2 text-left">{{ event.attendees.length }}</td>
-              </tr>
-            </tbody>
-          </table>
-          <div>
-            <AttendanceChart
-              v-if="!loading && !error"
-              :label="labels"
-              :chart-data="chartData"
-            ></AttendanceChart>
+      <div class="container">
+        <div class="row">
+          <div class="col">
 
-            <!-- Start of loading animation -->
-            <div class="mt-40" v-if="loading">
-              <p
-                class="text-6xl font-bold text-center text-gray-500 animate-pulse"
-              >
-                Loading...
-              </p>
-            </div>
-            <!-- End of loading animation -->
+          </div>
+          <div class="col-8">
+            <div class="flex flex-col col-span-2">
+              <div style="max-height: 80%">
+                <ZipCodeChart v-if="!loading && !error" :label="labels" :chart-data="chartData"></ZipCodeChart>
 
-            <!-- Start of error alert -->
-            <div class="mt-12 bg-red-50" v-if="error">
-              <h3 class="px-4 py-1 text-4xl font-bold text-white bg-red-800">
-                {{ error.title }}
-              </h3>
-              <p class="p-4 text-lg font-bold text-red-900">
-                {{ error.message }}
-              </p>
+                <!-- Start of loading animation -->
+                <div class="mt-40" v-if="loading">
+                  <p class="text-6xl font-bold text-center text-gray-500 animate-pulse">
+                    Loading...
+                  </p>
+                </div>
+                <!-- End of loading animation -->
+
+                <!-- Start of error alert -->
+                <div class="mt-12 bg-red-50" v-if="error">
+                  <h3 class="px-4 py-1 text-4xl font-bold text-white bg-red-800">
+                    {{ error.title }}
+                  </h3>
+                  <p class="p-4 text-lg font-bold text-red-900">
+                    {{ error.message }}
+                  </p>
+                </div>
+                <!-- End of error alert -->
+              </div>
             </div>
-            <!-- End of error alert -->
+          </div>
+          <div class="col">
+
           </div>
         </div>
       </div>
+
     </div>
   </main>
 </template>

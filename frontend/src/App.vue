@@ -1,4 +1,5 @@
 <script>
+import { useLoggedInUserStore } from '../stores/userLogin'
 import axios from 'axios'
 const apiURL = import.meta.env.VITE_ROOT_API
 
@@ -9,73 +10,114 @@ export default {
       orgName: 'Dataplatform'
     }
   },
+  setup() {
+    const user = useLoggedInUserStore()
+    return { user }
+  },
   created() {
     axios.get(`${apiURL}/org`).then((res) => {
       this.orgName = res.data.name
     })
+  },
+  methods:{
+    clearStore(){
+      this.user.$reset
+    }
   }
 }
 </script>
 <template>
+  <div
+    class="d-flex flex-column flex-shrink-0 bg-light"
+    style="width: 4.5rem"
+  ></div>
   <main class="flex flex-row">
-    <div id="_container" class="h-screen">
+    <div
+      id="_container"
+      class="h-screen"
+      style="width: 240px"
+      v-if="user.isEditor || user.isViewer"
+    >
       <header class="w-full">
-        <section class="text-center">
+        <section class="text-center mb-4 mt-3">
           <img class="m-auto" src="@\assets\DanPersona.svg" />
+          <hr class="mt-10">
+          <div class="container text-start">
+          <!-- Display username and role of logged in user -->
+          <p class="userCred mt-3">
+            Welcome <strong> {{ user.name }} </strong>
+          </p>
+          <p class="userCred mt-2">
+            Logged in as: <strong> {{ user.role }} </strong>
+          </p></div>
         </section>
-        <nav class="mt-10">
+        <hr />
+        <nav class="mt-5">
           <ul class="flex flex-col gap-4">
-            <li>
-              <router-link to="/">
+            <li class="list-class">
+              <router-link to="/" class="routerlink">
                 <span
                   style="position: relative; top: 6px"
-                  class="material-icons"
+                  class="material-icons mr-2"
                   >dashboard</span
                 >
                 Dashboard
               </router-link>
             </li>
-            <li>
-              <router-link to="/intakeform">
+            <li v-if="user.isEditor">
+              <router-link to="/intakeform" class="routerlink">
                 <span
                   style="position: relative; top: 6px"
-                  class="material-icons"
-                  >people</span
+                  class="material-icons mr-2"
+                  >person_add</span
                 >
                 Client Intake Form
               </router-link>
             </li>
-            <li>
-              <router-link to="/eventform">
+            <li v-if="user.isEditor">
+              <router-link to="/eventform" class="routerlink">
                 <span
                   style="position: relative; top: 6px"
-                  class="material-icons"
+                  class="material-icons mr-2"
                   >event</span
                 >
                 Create Event
               </router-link>
             </li>
             <li>
-              <router-link to="/findclient">
+              <router-link to="/findclient" class="routerlink">
                 <span
                   style="position: relative; top: 6px"
-                  class="material-icons"
-                  >search</span
+                  class="material-icons mr-2"
+                  >person_search</span
                 >
                 Find Client
               </router-link>
             </li>
             <li>
-              <router-link to="/findevents">
+              <router-link to="/findevents" class="routerlink">
                 <span
                   style="position: relative; top: 6px"
-                  class="material-icons"
+                  class="material-icons mr-2"
                   >search</span
                 >
                 Find Event
               </router-link>
             </li>
+            <li>
+              <router-link to="/eventservices" class="routerlink">
+                <span
+                  style="position: relative; top: 6px"
+                  class="material-icons mr-2"
+                  ><span class="material-symbols-outlined">
+                    volunteer_activism
+                  </span></span
+                >
+                Services
+              </router-link>
+            </li>
           </ul>
+          <hr class="mt-5" />
         </nav>
       </header>
     </div>
@@ -85,8 +127,38 @@ export default {
         style="background: linear-gradient(250deg, #c8102e 70%, #efecec 50.6%)"
       >
         <h1 class="mr-20 text-3xl text-white">{{ this.orgName }}</h1>
+        <ul>
+          <li
+            class="mr-10 fw-bold fs-5"
+            v-if="!user.isEditor && !user.isViewer"
+          >
+            <router-link to="/loginView" class="routerlink">
+              <span
+                style="position: relative; top: 6px"
+                class="material-icons mr-2"
+                >login</span
+              >
+              Login
+            </router-link>
+          </li>
+          <li class="mr-10 fw-bold fs-5" v-if="user.isEditor || user.isViewer">
+            <a href="/" style="text-decoration: none; color: white">
+              <span
+                @click="store.logout(), useLoggedInUserStore.$reset"
+                class="nav-link"
+              >
+                <span
+                  style="position: relative; top: 6px"
+                  class="material-icons mr-2"
+                  >logout</span
+                >
+                Logout</span
+              >
+            </a>
+          </li>
+        </ul>
       </section>
-      <div>
+      <div style="height: 95vh">
         <router-view></router-view>
       </div>
     </div>
@@ -97,5 +169,16 @@ export default {
   background-color: #c8102e;
   color: white;
   padding: 18px;
+}
+
+.material-icons,
+.routerlink {
+  color: white;
+  text-decoration: none;
+}
+.userCred {
+  font-size: 14px;
+  justify-items: start;
+  color:lightgrey;
 }
 </style>

@@ -115,14 +115,15 @@ export default {
         <div></div>
         <div class="mt-5 grid-cols-2">
           <button
-            class="mr-10 border border-red-700 bg-white text-red-700 rounded"
+            class="mr-10 btn btn-outline-danger rounded"
             @click="clearSearch"
             type="submit"
           >
             Clear Search
           </button>
           <button
-            class="bg-red-700 text-white rounded"
+            class="btn "
+            style="background-color: #b91c1c; color: white"
             @click="handleSubmitForm"
             type="submit"
           >
@@ -139,15 +140,15 @@ export default {
     >
       <div class="ml-10">
         <h2 class="text-2xl font-bold">List of Clients</h2>
-        <h3 class="italic">Click table row to edit/display an entry</h3>
+        <h5 class="italic">Click table row to edit/display an entry</h5>
       </div>
       <div class="flex flex-col col-span-2">
         <table class="min-w-full shadow-md rounded">
-          <thead class="bg-gray-50 text-xl">
+          <thead class="table-heading text-xl text-left">
             <tr>
-              <th class="p-4 text-left">Name</th>
-              <th class="p-4 text-left">Phone number</th>
-              <th class="p-4 text-left">City</th>
+              <th class="p-3 text-left">Name</th>
+              <th class="p-3 text-left">Phone number</th>
+              <th class="p-3 text-left">City</th>
             </tr>
           </thead>
           <tbody class="divide-y divide-gray-300">
@@ -156,13 +157,13 @@ export default {
               v-for="client in queryData"
               :key="client._id"
             >
-              <td class="p-2 text-left">
+              <td class="pl-4 pt-2 pb-2 text-left">
                 {{ client.firstName + ' ' + client.lastName }}
               </td>
-              <td class="p-2 text-left">
+              <td class="pl-4 text-left">
                 {{ client.phoneNumber.primary }}
               </td>
-              <td class="p-2 text-left">{{ client.address.city }}</td>
+              <td class="pl-4 text-left">{{ client.address.city }}</td>
             </tr>
           </tbody>
         </table>
@@ -170,3 +171,10 @@ export default {
     </div>
   </main>
 </template>
+
+<style>
+.table-heading {
+  background-color: #b91c1c;
+  color: white;
+}
+</style>
