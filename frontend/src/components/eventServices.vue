@@ -1,13 +1,13 @@
 <script>
-import axios from "axios";
-import { useLoggedInUserStore } from "../../stores/userLogin";
-const apiURL = import.meta.env.VITE_ROOT_API;
+import axios from 'axios'
+import { useLoggedInUserStore } from '../../stores/userLogin'
+const apiURL = import.meta.env.VITE_ROOT_API
 
 export default {
-  props: ["id"],
+  props: ['id'],
   setup() {
-    const user = useLoggedInUserStore();
-    return { user };
+    const user = useLoggedInUserStore()
+    return { user }
   },
   data() {
     return {
@@ -15,50 +15,50 @@ export default {
       serviceToUpdate: [],
 
       service: {
-        name: "",
-        description: "",
+        name: '',
+        description: ''
       },
       showUpdate: false,
       showNewSer: false,
       addBtn: true,
       modalSave: true,
       modalDelete: true,
-      modalUpdate: true,
-    };
+      modalUpdate: true
+    }
   },
   created() {
-    this.getServices();
+    this.getServices()
   },
   methods: {
     /** Method to get all services */
     getServices() {
       axios.get(`${apiURL}/services`).then((res) => {
-        this.servicesAll = res.data;
-      });
-      window.scrollTo(0, 0);
+        this.servicesAll = res.data
+      })
+      window.scrollTo(0, 0)
     },
 
     /** Show add new service form */
     showNewSerContainer() {
-      this.clearServiceInfo();
-      this.showNewSer = true;
+      this.clearServiceInfo()
+      this.showNewSer = true
     },
 
     /** Clear service name and description */
     clearServiceInfo() {
-      (this.service.name = ""),
-        (this.service.description = ""),
-        (this.showUpdate = false);
+      ;(this.service.name = ''),
+        (this.service.description = ''),
+        (this.showUpdate = false)
     },
 
     /** close update form and clear service name and information */
     cancelUpdate() {
-      (this.addBtn = true), (this.showUpdate = false), this.clearServiceInfo();
+      ;(this.addBtn = true), (this.showUpdate = false), this.clearServiceInfo()
     },
 
     /** Close insert new service form */
     canselInsert() {
-      this.showNewSer = false;
+      this.showNewSer = false
     },
 
     /** Update existing service */
@@ -70,44 +70,57 @@ export default {
         )
         .then(() => {
           //alert('Service has been updated.')
-          this.getServices();
-        });
+          this.getServices()
+        })
     },
 
+    //Hard delete for service (NOT USED IN CURRENT APPLICATION)
     serviceDelete() {
       axios
         .delete(`${apiURL}/services/${this.serviceToUpdate._id}`)
         .then(() => {
           // alert('Event has been deleted.')
-          (this.showUpdate = false), (this.addBtn = true), this.getServices();
-        });
-      this.clearServiceInfo();
+          ;(this.showUpdate = false), (this.addBtn = true), this.getServices()
+        })
+      this.clearServiceInfo()
+    },
+
+    //  Soft Delete for event services
+    //  Removes organization from service
+    deregisterService() {
+      axios
+        .put(`${apiURL}/services/deregister/${this.serviceToUpdate._id}`)
+        .then(() => {
+          // alert('Event has been deleted.')
+          ;(this.showUpdate = false), (this.addBtn = true), this.getServices()
+        })
+      this.clearServiceInfo()
     },
 
     /** Post new service to database */
     addNewService() {
       axios.post(`${apiURL}/services`, this.service).then(() => {
-        (this.showNewSer = false),
+        ;(this.showNewSer = false),
           (this.showUpdateContainer = false),
           // alert('Service has been added.'),
 
-          this.getServices();
-      });
+          this.getServices()
+      })
     },
 
     /** Retrieve information of selected service to be updated   */
     editService(serviceID) {
       axios.get(`${apiURL}/services/id/${serviceID}`).then((res) => {
-        (this.serviceToUpdate = res.data),
+        ;(this.serviceToUpdate = res.data),
           (this.service.name = res.data.name),
           (this.service.description = res.data.description),
           (this.showUpdate = true),
           (this.addBtn = false),
-          (tis.showNewSer = false);
-      });
-    },
-  },
-};
+          (tis.showNewSer = false)
+      })
+    }
+  }
+}
 
 /** Main view for event services */
 </script>
@@ -160,7 +173,7 @@ export default {
                   <tbody class="divide-y divide-gray-300">
                     <tr
                       @click="
-                        editService(service._id);
+                        editService(service._id)
                         canselInsert();
                       "
                       v-for="service in servicesAll"
@@ -238,7 +251,7 @@ export default {
                 style="width: 100px"
                 @click="
                   canselInsert();
-                  clearServiceInfo();
+                  clearServiceInfo()
                 "
               >
                 Cancel
@@ -402,7 +415,7 @@ export default {
               class="btn btn-danger rounded fw-bold"
               data-bs-dismiss="modal"
               style="width: 100px"
-              @click="serviceDelete()"
+              @click="deregisterService()"
             >
               Yes
             </button>
