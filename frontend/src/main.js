@@ -9,11 +9,11 @@ import 'bootstrap/dist/css/bootstrap.min.css'
 import 'bootstrap'
 
 const app = createApp(App)
-const pinia = createPinia();
+const pinia = createPinia()
 pinia.use(piniaPluginPersistedState)
 pinia.use(({ store }) => {
-    store.$router = markRaw(router)
-  });
+  store.$router = markRaw(router)
+})
 
 app.use(pinia)
 
