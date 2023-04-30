@@ -1,24 +1,24 @@
 <script>
 // import store
-import { useLoggedInUserStore } from "../../stores/userLogin";
+import { useLoggedInUserStore } from '../../stores/userLogin'
 
 export default {
   data: () => {
     return {
-      username: "",
-      password: "",
-    };
+      username: '',
+      password: ''
+    }
   },
   // setup is from composition api
   // allows to add additional functionality not part of the standard VUEjs framework (pini is an additional library)
   setup() {
-    const store = useLoggedInUserStore();
+    const store = useLoggedInUserStore()
     return {
       // you can return the whole store instance to use it in the template
-      store,
-    };
-  },
-};
+      store
+    }
+  }
+}
 
 // at level of button call store.login providing the variables
 </script>
