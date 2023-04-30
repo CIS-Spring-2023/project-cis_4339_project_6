@@ -8,16 +8,18 @@ const { clients } = require('../models/models')
 
 // GET 10 most recent clients for org
 router.get('/', (req, res, next) => {
-  clients.find({ org: org }, (error, data) => {
-    if (error) {
-      return next(error)
-    } else {
-      console.log(data)
-      return res.json(data)
-    }
-  })
-  .sort({ updatedAt: -1 })
-  .limit(10)
+  const dbQuery = { orgs: org }
+  clients
+    .find(dbQuery, (error, data) => {
+      if (error) {
+        return next(error)
+      } else {
+        console.log(data)
+        return res.json(data)
+      }
+    })
+    .sort({ updatedAt: -1 })
+    .limit(10)
 })
 
 // GET single client by ID
