@@ -10,6 +10,7 @@ For form validation [Vuelidate](https://vuelidate-next.netlify.app/) is used.
 2. User Login - Frontend
 3. Backend - Main
 4. Backend - MongoDB DataSchema
+5. API Documentation 
 
 ### 1. Frontend
 within terminal
@@ -18,10 +19,7 @@ cd frontend
 npm install
 npm run dev
 ```
-Vite API in frontend .env file 
-```
- VITE_ROOT_API=http://localhost:3000
-```
+
 ### 2. User Login Frontend
 
 | User name | Password | Role |
@@ -39,14 +37,7 @@ npm install
 npm start
 ```
 
-MongoDB setup information in the .env file (backend)
-```
-MONGO_URL=mongodb+srv://UH_CIS_Projects:8e9KZEH44u3ndOTo@ciscluster.xj0hvfk.mongodb.net/CIS4339_Project
-PORT = 3000
-org = Org6
-```
-
-### 4. Backend - MongoDB DataSchema
+### 4. Backend - MongoDB Document Structure
 *Note: The dataschema structure is based on presumtions from demo application provided and will be updated as neccessary during sprint 3.* 
 The follwing depicts examples of the current data schema in the cloud MongoDB instance:
 #### ORG Data Schema
@@ -63,3 +54,8 @@ The follwing depicts examples of the current data schema in the cloud MongoDB in
 
 #### User Data Schema
 ![userDataSchema](https://github.com/CIS-Spring-2023/project-cis_4339_project_6/blob/main/frontend/src/assets/UserDataSchema.jpg)
+
+### 3. API Documentation
+```
+API Documentation URL: https://documenter.getpostman.com/view/23046677/2s93eSZae2
+```
