@@ -2,11 +2,13 @@
 import { useLoggedInUserStore } from '../../stores/userLogin'
 import axios from 'axios'
 import ZipCodeChart from './pieChart.vue'
+import AttendanceChart from './attendanceChart.vue'
 const apiURL = import.meta.env.VITE_ROOT_API
 
 export default {
   components: {
-    ZipCodeChart
+    ZipCodeChart,
+    AttendanceChart
   },
   data() {
     return {
@@ -20,8 +22,8 @@ export default {
     }
   },
   setup() {
-    const user = useLoggedInUserStore();
-    return { user };
+    const user = useLoggedInUserStore()
+    return { user }
   },
   mounted() {
     this.getAttendanceData()
@@ -60,25 +62,9 @@ export default {
       this.loading = false
     },
 
-    /** The followig two mwthods are not required
-     * for data display in pie chart
-    formattedDate(datetimeDB) {
-      const dt = DateTime.fromISO(datetimeDB, {
-        zone: 'utc'
-      })
-      return dt
-        .setZone(DateTime.now().zoneName, { keepLocalTime: true })
-        .toLocaleString()
-    },
-    // method to allow click through table to event details
-    editEvent(eventID) {
-      this.$router.push({ name: 'eventdetails', params: { id: eventID } })
-    },
-    */
-
-    /** 
-     * The following implementation of counting duplicate values 
-     * of zip codes for chart was derrived from 
+    /**
+     * The following implementation of counting duplicate values
+     * of zip codes for chart was derrived from
      * https://stackoverflow.com/questions/19395257/how-to-count-duplicate-value-in-an-array-in-javascript
      */
     findZipCount() {
@@ -100,27 +86,35 @@ export default {
   <main>
     <div>
       <h1
-        class="font-bold text-4xl text-red-700 tracking-widest text-center mt-10"
+        class="font-bold text-3xl text-red-700 tracking-widest text-center mt-10"
       >
         Welcome
       </h1>
-      <p class="text-center" style="font-style: oblique; color: #b91c1c" v-if="!user.isEditor && !user.isViewer">
+      <p
+        class="text-center"
+        style="font-style: oblique; color: #b91c1c"
+        v-if="!user.isEditor && !user.isViewer"
+      >
         Please log in to access menu options
       </p>
       <br />
-      <div class="container">
+      <div class="container" style="width: 500px, height: 500px">
         <div class="row">
-          <div class="col">
-
-          </div>
+          <div class="col"></div>
           <div class="col-8">
             <div class="flex flex-col col-span-2">
               <div style="max-height: 80%">
-                <ZipCodeChart v-if="!loading && !error" :label="labels" :chart-data="chartData"></ZipCodeChart>
+                <ZipCodeChart
+                  v-if="!loading && !error"
+                  :label="labels"
+                  :chart-data="chartData"
+                ></ZipCodeChart>
 
                 <!-- Start of loading animation -->
                 <div class="mt-40" v-if="loading">
-                  <p class="text-6xl font-bold text-center text-gray-500 animate-pulse">
+                  <p
+                    class="text-6xl font-bold text-center text-gray-500 animate-pulse"
+                  >
                     Loading...
                   </p>
                 </div>
@@ -128,7 +122,9 @@ export default {
 
                 <!-- Start of error alert -->
                 <div class="mt-12 bg-red-50" v-if="error">
-                  <h3 class="px-4 py-1 text-4xl font-bold text-white bg-red-800">
+                  <h3
+                    class="px-4 py-1 text-4xl font-bold text-white bg-red-800"
+                  >
                     {{ error.title }}
                   </h3>
                   <p class="p-4 text-lg font-bold text-red-900">
@@ -139,12 +135,49 @@ export default {
               </div>
             </div>
           </div>
-          <div class="col">
-
-          </div>
+          <div class="col"></div>
         </div>
       </div>
+      <div class="container" v-if="user.isEditor || user.isViewer">
+        <div class="row">
+          <div class="col"></div>
+          <div class="col-8">
+            <div class="flex flex-col col-span-2">
+              <div style="max-height: 80%">
+                <AttendanceChart
+                  v-if="!loading && !error"
+                  :label="labels"
+                  :chart-data="chartData"
+                ></AttendanceChart>
 
+                <!-- Start of loading animation -->
+                <div class="mt-40" v-if="loading">
+                  <p
+                    class="text-6xl font-bold text-center text-gray-500 animate-pulse"
+                  >
+                    Loading...
+                  </p>
+                </div>
+                <!-- End of loading animation -->
+
+                <!-- Start of error alert -->
+                <div class="mt-12 bg-red-50" v-if="error">
+                  <h3
+                    class="px-4 py-1 text-4xl font-bold text-white bg-red-800"
+                  >
+                    {{ error.title }}
+                  </h3>
+                  <p class="p-4 text-lg font-bold text-red-900">
+                    {{ error.message }}
+                  </p>
+                </div>
+                <!-- End of error alert -->
+              </div>
+            </div>
+          </div>
+          <div class="col"></div>
+        </div>
+      </div>
     </div>
   </main>
 </template>
