@@ -1,42 +1,42 @@
 <script>
-import useVuelidate from "@vuelidate/core";
-import { required, email, alpha, numeric } from "@vuelidate/validators";
-import axios from "axios";
-const apiURL = import.meta.env.VITE_ROOT_API;
+import useVuelidate from '@vuelidate/core'
+import { required, email, alpha, numeric } from '@vuelidate/validators'
+import axios from 'axios'
+const apiURL = import.meta.env.VITE_ROOT_API
 
 export default {
   setup() {
-    return { v$: useVuelidate({ $autoDirty: true }) };
+    return { v$: useVuelidate({ $autoDirty: true }) }
   },
   data() {
     return {
-      org: "",
+      org: '',
       client: {
-        firstName: "",
-        middleName: "",
-        lastName: "",
-        email: "",
+        firstName: '',
+        middleName: '',
+        lastName: '',
+        email: '',
         phoneNumber: {
-          primary: "",
-          alternate: "",
+          primary: '',
+          alternate: ''
         },
         address: {
-          line1: "",
-          line2: "",
-          city: "",
-          county: "",
-          zip: "",
-        },
-      },
-    };
+          line1: '',
+          line2: '',
+          city: '',
+          county: '',
+          zip: ''
+        }
+      }
+    }
   },
   created() {
     axios.get(`${apiURL}/org`).then((res) => {
-      this.org = res.data._id;
-    });
+      this.org = res.data._id
+    })
   },
   mounted() {
-    window.scrollTo(0, 0);
+    window.scrollTo(0, 0)
   },
   methods: {
     // if valid:
@@ -63,8 +63,8 @@ export default {
                       this.$router.push({ name: 'findclient' })
                     })
                     .catch((error) => {
-                      console.log(error);
-                    });
+                      console.log(error)
+                    })
                 }
               } else {
                 axios
@@ -74,13 +74,13 @@ export default {
                     this.$router.push({ name: 'findclient' })
                   })
                   .catch((error) => {
-                    console.log(error);
-                  });
+                    console.log(error)
+                  })
               }
-            });
+            })
         }
-      });
-    },
+      })
+    }
   },
   // sets validations for the various data properties
   validations() {
@@ -90,15 +90,15 @@ export default {
         lastName: { required, alpha },
         email: { email },
         address: {
-          city: { required },
+          city: { required }
         },
         phoneNumber: {
-          primary: { required, numeric },
-        },
-      },
-    };
-  },
-};
+          primary: { required, numeric }
+        }
+      }
+    }
+  }
+}
 </script>
 <template>
   <main>
