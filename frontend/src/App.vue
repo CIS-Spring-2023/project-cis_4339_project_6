@@ -7,7 +7,7 @@ export default {
   name: 'App',
   data() {
     return {
-      orgName: 'Dataplatform'
+      orgName: ''
     }
   },
   setup() {
@@ -15,14 +15,10 @@ export default {
     return { user }
   },
   created() {
+    // Obtain organization name from database
     axios.get(`${apiURL}/org`).then((res) => {
       this.orgName = res.data.name
     })
-  },
-  methods:{
-    clearStore(){
-      this.user.$reset
-    }
   }
 }
 </script>
@@ -41,15 +37,16 @@ export default {
       <header class="w-full">
         <section class="text-center mb-4 mt-3">
           <img class="m-auto" src="@\assets\DanPersona.svg" />
-          <hr class="mt-10">
+          <hr class="mt-10" />
           <div class="container text-start">
-          <!-- Display username and role of logged in user -->
-          <p class="userCred mt-3">
-            Welcome <strong> {{ user.name }} </strong>
-          </p>
-          <p class="userCred mt-2">
-            Logged in as: <strong> {{ user.role }} </strong>
-          </p></div>
+            <!-- Display username and role of logged in user -->
+            <p class="userCred mt-3">
+              Welcome <strong> {{ user.name }} </strong>
+            </p>
+            <p class="userCred mt-2">
+              Logged in as: <strong> {{ user.role }} </strong>
+            </p>
+          </div>
         </section>
         <hr />
         <nav class="mt-5">
@@ -94,6 +91,7 @@ export default {
                 Find Client
               </router-link>
             </li>
+
             <li>
               <router-link to="/findevents" class="routerlink">
                 <span
@@ -143,10 +141,8 @@ export default {
           </li>
           <li class="mr-10 fw-bold fs-5" v-if="user.isEditor || user.isViewer">
             <a href="/" style="text-decoration: none; color: white">
-              <span
-                @click="store.logout(), useLoggedInUserStore.$reset"
-                class="nav-link"
-              >
+              <!--Clear userLogin store when user clicks on Logout -->
+              <span @click="user.$reset" class="nav-link">
                 <span
                   style="position: relative; top: 6px"
                   class="material-icons mr-2"
@@ -179,6 +175,6 @@ export default {
 .userCred {
   font-size: 14px;
   justify-items: start;
-  color:lightgrey;
+  color: white;
 }
 </style>
